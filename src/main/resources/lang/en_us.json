@@ -1,0 +1,12 @@
+{
+	"command.nopermission":"&a[IronSaver] &cYou have no permission to run this command",
+	"command.wrongusage":"&a[IronSaver] &cWrong usage,Usage:&a/ironsave save &c or &a/ironsave backup &c or &a/ironsave backup [save-path]",
+	"command.path.notexsit":"&a[IronSaver] &cThe path is not exist",
+	"command.path.notdirectory":"&a[IronSaver] &cThe path is not a directory",
+	"broadcast.saving":"&a[IronSaver] Saving worlds",
+	"command.saving":"&a[IronSaver] Saving worlds",
+	"broadcast.backup":"&a[IronSaver] Backing up worlds",
+	"command.backup":"&a[IronSaver] Backing up worlds",
+	"broadcast.save.complete":"&a[IronSaver] Worlds are saved",
+	"broadcast.backup.complete":"&a[IronSaver] Worlds are backed up"
+}
