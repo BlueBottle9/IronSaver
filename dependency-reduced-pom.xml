@@ -4,7 +4,7 @@
   <groupId>io.github.bluebottle9</groupId>
   <artifactId>iron-saver</artifactId>
   <name>IronSaver</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <description>a simple bukkit plugin for saving world</description>
   <build>
     <plugins>
@@ -20,20 +20,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>17</release>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>17</release>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   <repositories>
@@ -46,13 +32,9 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.18.1-R0.1-SNAPSHOT</version>
+      <version>1.19-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>commons-lang</artifactId>
-          <groupId>commons-lang</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>guava</artifactId>
           <groupId>com.google.guava</groupId>
@@ -71,17 +53,10 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>bluescreen9.minecraft</groupId>
-      <artifactId>nms</artifactId>
-      <version>v1_18_R2</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <java.version>17.0.1</java.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

@@ -1,9 +1,8 @@
 package bluescreen9.minecraft.bukkit.ironsaver;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +30,7 @@ public class WorldUtil {
 					for (World world:Main.IronSaver.getServer().getWorlds()) {
 						save(world);
 					}
-					MessageUtil.broadcast("broadcast.save.complete");
+					Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.save.complete",MessageProcessor.processor);
 				}
 				
 				public static void backup(World world,Date date) {
@@ -47,7 +46,9 @@ public class WorldUtil {
 								if (locker.exists()) {
 									locker.delete();
 								}
-								zip(worldFolder, dest);
+								ArrayList<File> files = new ArrayList<File>();
+								files.add(worldFolder);
+								zip(files, dest);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -67,7 +68,9 @@ public class WorldUtil {
 								if (locker.exists()) {
 									locker.delete();
 								}
-								zip(worldFolder, dest);
+								ArrayList<File> files = new ArrayList<File>();
+								files.add(worldFolder);
+								zip(files, dest);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -82,7 +85,7 @@ public class WorldUtil {
 							for (World world:worlds){
 								backup(world,date);
 							}
-							MessageUtil.broadcast("broadcast.backup.complete");
+							Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.backup.complete",MessageProcessor.processor);
 						}
 					}.runTaskAsynchronously(Main.IronSaver);
 				}
@@ -96,122 +99,92 @@ public class WorldUtil {
 							for (World world:worlds){
 								backup(world,date,path);
 							}
-							MessageUtil.broadcast("broadcast.backup.complete");
+							Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.backup.complete",MessageProcessor.processor);
 						}
 					}.runTaskAsynchronously(Main.IronSaver);
 				}
 				
-				public static void zip(File src, File dest) {
-					int byte_size = 2048;
-					 try {
-			              ZipOutputStream ziper = new ZipOutputStream(new FileOutputStream(dest));
-			              if (src.isFile()) {
-			                BufferedInputStream in = new BufferedInputStream(new FileInputStream(src));
-			                ZipEntry fileEntry = new ZipEntry(src.getName());
-			                ziper.putNextEntry(fileEntry);
-			                int size = in.available();
-			                int byteSize = 0;
-			                if (size / byte_size < 1) {
-			                  byteSize = 1;
-			                } else {
-			                  byteSize = byte_size;
-			                } 
-			                byte[] data = new byte[byteSize];
-			                int blockNum = size / byteSize;
-			                int Left = 0;
-			                Left = size % byteSize;
-			                for (long i = 0L; i <= blockNum; i++) {
-			                  if (i < blockNum) {
-			                    in.read(data);
-			                  } else {
-			                    data = new byte[Left];
-			                    in.read(data);
-			                  } 
-			                  ziper.write(data);
-			                  ziper.flush();
-			                } 
-			                ziper.closeEntry();
-			                ziper.close();
-			                in.close();
-			              } else {
-			                ArrayList<ZipEntry> Entrys = (ArrayList<ZipEntry>)fileToZipEntrys(src);
-			                for (ZipEntry z : Entrys) {
-			                  if (!z.getName().endsWith("/")) {
-			                    BufferedInputStream readerZ = new BufferedInputStream(new FileInputStream(new File(src.getParentFile(), z.getName())));
-			                    ziper.putNextEntry(z);
-			                    int size = readerZ.available();
-			                    int ByteSize = 0;
-			                    if (size / byte_size < 1) {
-			                      ByteSize = 1;
-			                    } else {
-			                      ByteSize = byte_size;
-			                    } 
-			                    byte[] data = new byte[ByteSize];
-			                    int BlockNum = size / ByteSize;
-			                    int Left = 0;
-			                    Left = size % ByteSize;
-			                    for (long i = 0L; i <= BlockNum; i++) {
-			                      if (i < BlockNum) {
-			                        readerZ.read(data);
-			                      } else {
-			                        data = new byte[Left];
-			                        readerZ.read(data);
-			                      } 
-			                      ziper.write(data);
-			                      ziper.flush();
-			                    } 
-			                    readerZ.close();
-			                    ziper.closeEntry();
-			                    continue;
-			                  } 
-			                  ziper.putNextEntry(z);
-			                  ziper.closeEntry();
-			                } 
-			                ziper.close();
-			              } 
-			            } catch (Exception e) {
-			              e.printStackTrace();
-			            } 
-				  }
-				
-				 public static List<ZipEntry> fileToZipEntrys(File file) {
-					    ArrayList<ZipEntry> entryList = new ArrayList<>();
-					    if (file.isFile()) {
-					      entryList.add(new ZipEntry(file.getName()));
-					    } else {
-					      File[] fileList = file.listFiles();
-					      if (fileList != null) {
-					        byte b;
-					        int i;
-					        File[] arrayOfFile;
-					        for (i = (arrayOfFile = fileList).length, b = 0; b < i; ) {
-					          File f = arrayOfFile[b];
-					          entryList.addAll(fileToZipEntrys(f, String.valueOf(file.getName()) + "/"));
-					          b++;
-					        } 
-					      } else {
-					        entryList.add(new ZipEntry(String.valueOf(file.getName()) + "/"));
-					      } 
-					    } 
-					    return entryList;
-					  }
-				 
-				 private static List<ZipEntry> fileToZipEntrys(File file, String parent) {
-					    ArrayList<ZipEntry> entryList = new ArrayList<>();
-					    if (file.isFile()) {
-					      entryList.add(new ZipEntry(String.valueOf(parent) + file.getName()));
-					    } else {
-					      entryList.add(new ZipEntry(String.valueOf(parent) + file.getName() + "/"));
-					      File[] fileList = file.listFiles();
-					      byte b;
-					      int i;
-					      File[] arrayOfFile1;
-					      for (i = (arrayOfFile1 = fileList).length, b = 0; b < i; ) {
-					        File f = arrayOfFile1[b];
-					        entryList.addAll(fileToZipEntrys(f, String.valueOf(parent) + file.getName() + "/"));
-					        b++;
-					      } 
-					    } 
-					    return entryList;
-					  }
+				public static void zip(List<File> sources,File dest) {
+					try {
+							if (!dest.exists()) {
+								dest.createNewFile();
+							}
+							
+							ZipOutputStream out = new ZipOutputStream(new FileOutputStream(dest));
+							
+							ArrayList<ZipEntry> entry = new ArrayList<ZipEntry>();
+							entry.addAll(getZipEntry(sources));
+							
+							for (ZipEntry ze:entry) {
+									out.putNextEntry(ze);
+								if (ze.isDirectory()) {
+									continue;
+								}
+								File f = new File(sources.get(0).getParentFile().getAbsolutePath() + "/" + ze.getName());
+								Files.copy(f.toPath(), out);
+							}
+							out.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
+
+			public static List<File> listFile(File file) {
+			ArrayList<File> files = new ArrayList<File>();
+			if (file.isFile()) {
+				files.add(file);
+				return files;
+			}
+			for (File f:file.listFiles()) {
+				if (f.isFile()) {
+					files.add(file);
+					continue;
+				}
+				files.add(f);
+				files.addAll(listFile(f));
+			}
+			return files;
+			}
+
+			public static List<ZipEntry> getZipEntry(List<File> file) {
+						ArrayList<ZipEntry> entry = new ArrayList<ZipEntry>();
+						try {
+							ArrayList<File> files = new ArrayList<File>();
+							files.addAll(file);
+							for (File f:files) {
+								if (f.isFile()) {
+									entry.add(new ZipEntry(f.getName()));
+									continue;
+								}
+								entry.addAll(getZipEntry(f.listFiles(),f.getName() + "/"));
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+			return entry;
+			}
+
+			public static List<ZipEntry> getZipEntry(File[] file,String parent){
+					ArrayList<ZipEntry> entry = new ArrayList<ZipEntry>();
+					try {
+							for (File f:file) {
+								if (f.isFile()) {
+									entry.add(new ZipEntry(parent + f.getName()));
+									continue;
+								}
+								if (f.listFiles() == null) {
+									entry.add(new ZipEntry(parent + f.getName()));
+									continue;
+								}
+								if (f.listFiles().length == 0) {
+									entry.add(new ZipEntry(parent + f.getName()));
+									continue;
+								}
+								entry.addAll(getZipEntry(f.listFiles(), parent + f.getName() + "/"));
+							}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			return entry;
+			}
 }

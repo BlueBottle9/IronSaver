@@ -28,18 +28,18 @@ public class IronSaverCommand implements TabExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!sender.isOp()) {
-			MessageUtil.sendMessage(sender, "command.nopermission");
+			Main.Language.sendMessage(sender, "command.nopermission",MessageProcessor.processor);
 			return true;
 		}
 		
 		
 		if (args.length == 0) {
-			MessageUtil.sendMessage(sender, "command.wrongusage");
+			Main.Language.sendMessage(sender, "command.wrongusage",MessageProcessor.processor);
 			return true;
 		}
 		
 		if ("save".equals(args[0]) && args.length != 1) {
-			MessageUtil.sendMessage(sender, "command.wrongusage");
+			Main.Language.sendMessage(sender, "command.wrongusage",MessageProcessor.processor);
 			return true;
 		}
 		
@@ -50,8 +50,8 @@ public class IronSaverCommand implements TabExecutor{
 					WorldUtil.saveAll();
 				}
 			}.runTask(Main.IronSaver);
-			MessageUtil.sendMessage(sender, "command.saving");
-			MessageUtil.broadcast("broadcast.saving");
+			Main.Language.sendMessage(sender, "command.saving",MessageProcessor.processor);
+			Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.saving",MessageProcessor.processor);
 			return true;
 		}
 		
@@ -59,8 +59,8 @@ public class IronSaverCommand implements TabExecutor{
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					MessageUtil.sendMessage(sender, "command.backup");
-					MessageUtil.broadcast("broadcast.backup");
+					Main.Language.sendMessage(sender, "command.backup",MessageProcessor.processor);
+					Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.backup",MessageProcessor.processor);
 					WorldUtil.backupAll();
 				}
 			}.runTask(Main.IronSaver);
@@ -74,16 +74,16 @@ public class IronSaverCommand implements TabExecutor{
 		
 		File folder = new File(builder.toString());
 		if (!folder.exists()) {
-			MessageUtil.sendMessage(sender, "command.path.notexsit");
+			Main.Language.sendMessage(sender, "command.path.notexsit",MessageProcessor.processor);
 			return true;
 		}
 		
 		if (!folder.isDirectory()) {
-			MessageUtil.sendMessage(sender, "command.path.notdirectory");
+			Main.Language.sendMessage(sender, "command.path.notdirectory",MessageProcessor.processor);
 			return true;
 		}
-		MessageUtil.sendMessage(sender, "command.backup");
-		MessageUtil.broadcast("broadcast.backup");
+		Main.Language.sendMessage(sender, "command.backup",MessageProcessor.processor);
+		Main.Language.broadcastMessage(Main.IronSaver.getServer(),"broadcast.backup",MessageProcessor.processor);
 		new BukkitRunnable() {
 			@Override
 			public void run() {

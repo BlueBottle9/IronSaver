@@ -24,12 +24,11 @@ public class Main extends JavaPlugin{
 					Language.setDefaultLang(Config.getString("default-language"));
 					getCommand("ironsave").setExecutor(new IronSaverCommand());
 					getCommand("ironsave").setTabCompleter(new IronSaverCommand());
-					
 					if (Config.getBoolean("auto-save.enable")) {
 						new BukkitRunnable() {
 							@Override
 							public void run() {
-								MessageUtil.broadcast("broadcast.saving");
+								Language.broadcastMessage(getServer(), "broadcast.saving",MessageProcessor.processor);
 								WorldUtil.saveAll();
 							}
 						}.runTaskTimer(IronSaver, Config.getLong("auto-save.timer(s)") * 20, Config.getLong("auto-save.timer(s)") * 20);
@@ -39,15 +38,10 @@ public class Main extends JavaPlugin{
 						new BukkitRunnable() {
 							@Override
 							public void run() {
-								MessageUtil.broadcast("broadcast.backup");
+								Language.broadcastMessage(getServer(), "broadcast.backup",MessageProcessor.processor);
 								WorldUtil.backupAll();
 							}
 						}.runTaskTimerAsynchronously(IronSaver, Config.getLong("auto-backup.timer(s)") * 20, Config.getLong("auto-backup.timer(s)") * 20);
 					}
-				}
-				
-				@Override
-				public void onDisable() {
-						
 				}
 }
